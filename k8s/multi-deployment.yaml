@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-Deployment
+specs:
+  replicas: 3
+  selectors:
+    matchLabels:
+      component: web
+  template:
+    metadata:
+      label:
+        component: web
+    spec:
+      containers:
+        - name: client
+          image: friendou/fibonnaci-client
+          ports:
+            - containerPort: 3000

@@ -1,0 +1,65 @@
+# This is an example of how to have only one config with multiple
+# objects in kubernetes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-Deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: friendou/fibonacci-server
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: web
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: web
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: client
+          image: friendou/fibonacci-client
+          ports:
+            - containerPort: 5000
+---
+apiversion: v1
+kind: Service
+metadata:
+  name: server-cluster-ip-server
+spec:
+  type: ClusterIP
+  selector:
+    component: server
+  ports:
+    - post: 5000
+    - targetPort: 5000  
